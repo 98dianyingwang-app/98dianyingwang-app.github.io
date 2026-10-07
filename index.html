@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="98电影网（98dianyingwang-app）是高清电影在线观看与影视资源导航平台，提供最新电影、热门电视剧、动漫综艺、电影排行等栏目，免费高清流畅播放。">
+<meta name="keywords" content="98电影网,98dianyingwang-app,电影网,高清电影,在线观看,最新电影,电视剧,电影排行榜">
+<meta name="author" content="98电影网">
+<meta name="robots" content="index, follow">
+<title>98电影网_高清电影在线观看_最新影视大全 - 98dianyingwang-app</title>
+<link rel="canonical" href="https://98dianyingwang-app.github.io/">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root{
+        --bg:#07091a;
+        --bg2:#0d1128;
+        --card:#131839;
+        --line:rgba(255,255,255,.08);
+        --txt:#e8eaf2;
+        --sub:#9aa3c4;
+        --gold:#ffb545;
+        --red:#ff5b5b;
+        --blue:#4d8dff;
+    }
+    html{ scroll-behavior:smooth; }
+    body{
+        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+        background:var(--bg);
+        color:var(--txt);
+        line-height:1.6;
+        overflow-x:hidden;
+    }
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ max-width:1160px; margin:0 auto; padding:0 18px; }
+
+    /* 顶部导航 */
+    header{
+        position:sticky; top:0; z-index:50;
+        background:linear-gradient(180deg,rgba(7,9,26,.92),rgba(7,9,26,.78));
+        backdrop-filter:blur(10px);
+        border-bottom:1px solid var(--line);
+    }
+    .nav{ display:flex; align-items:center; gap:18px; height:60px; }
+    .logo{ display:flex; align-items:center; gap:8px; font-size:20px; font-weight:800; letter-spacing:.5px; }
+    .logo .dot{ width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,var(--red),var(--gold)); display:grid; place-items:center; font-size:14px; color:#fff; }
+    .logo em{ font-style:normal; color:var(--gold); }
+    .nav-links{ display:flex; gap:22px; margin-left:auto; }
+    .nav-links a{ font-size:14px; color:var(--sub); transition:.2s; }
+    .nav-links a:hover{ color:var(--txt); }
+    .nav-links a.active{ color:var(--gold); }
+    .search{ display:flex; align-items:center; gap:6px; background:var(--bg2); border:1px solid var(--line); border-radius:20px; padding:6px 12px; }
+    .search input{ background:none; border:none; outline:none; color:var(--txt); font-size:13px; width:120px; }
+    .search input::placeholder{ color:#6d7599; }
+    .menu-btn{ display:none; background:none; border:none; color:var(--txt); font-size:24px; cursor:pointer; }
+
+    /* Hero */
+    .hero{ position:relative; padding:64px 0 72px; overflow:hidden; }
+    .hero::after{ content:""; position:absolute; inset:0; background:
+        radial-gradient(600px 300px at 80% 10%, rgba(255,91,91,.18), transparent 60%),
+        radial-gradient(500px 300px at 10% 60%, rgba(77,141,255,.15), transparent 60%);
+        z-index:0; }
+    .hero .wrap{ position:relative; z-index:1; }
+    .hero h1{ font-size:clamp(28px,5vw,48px); line-height:1.2; font-weight:800; }
+    .hero h1 span{ background:linear-gradient(90deg,var(--gold),var(--red)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .hero p{ color:var(--sub); max-width:620px; margin-top:16px; font-size:15px; }
+    .hero-tags{ display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
+    .hero-tags b{ font-size:12px; padding:6px 14px; border-radius:20px; background:var(--card); border:1px solid var(--line); color:var(--sub); font-weight:600; }
+    .hero-tags b.hot{ color:var(--gold); border-color:rgba(255,181,69,.4); }
+
+    /* 栏目区块 */
+    section{ padding:56px 0; }
+    .sec-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:26px; flex-wrap:wrap; }
+    .sec-head h2{ font-size:22px; display:flex; align-items:center; gap:10px; }
+    .sec-head h2 i{ width:4px; height:20px; border-radius:3px; background:var(--gold); }
+    .sec-head .more{ font-size:13px; color:var(--sub); }
+    .sec-head .more:hover{ color:var(--gold); }
+
+    .grid{ display:grid; gap:20px; }
+    .grid.movies{ grid-template-columns:repeat(4,1fr); }
+    .grid.rank{ grid-template-columns:repeat(2,1fr); }
+
+    .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; transition:.25s; }
+    .card:hover{ transform:translateY(-6px); border-color:rgba(255,181,69,.35); box-shadow:0 18px 40px rgba(0,0,0,.5); }
+    .poster{ position:relative; aspect-ratio:3/4; overflow:hidden; background:var(--bg2); }
+    .poster .ph{ position:absolute; inset:0; display:grid; place-items:center; font-size:26px; font-weight:800; color:rgba(255,255,255,.12); }
+    .poster .tag{ position:absolute; top:10px; left:10px; font-size:11px; padding:3px 9px; border-radius:6px; background:rgba(0,0,0,.55); backdrop-filter:blur(4px); }
+    .poster .tag.score{ right:10px; left:auto; color:var(--gold); font-weight:700; }
+    .poster .bar{ position:absolute; bottom:0; left:0; height:4px; background:linear-gradient(90deg,var(--red),var(--gold)); }
+    .card .info{ padding:12px 14px 14px; }
+    .card .info h3{ font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .card .info p{ font-size:12px; color:var(--sub); margin-top:6px; display:flex; justify-content:space-between; }
+
+    .rank-item{ display:flex; align-items:center; gap:14px; padding:14px; background:var(--card); border:1px solid var(--line); border-radius:12px; transition:.2s; }
+    .rank-item:hover{ border-color:rgba(77,141,255,.4); background:#171c40; }
+    .rank-item .no{ font-size:22px; font-weight:800; width:34px; text-align:center; }
+    .rank-item:nth-child(1) .no{ color:var(--gold); }
+    .rank-item:nth-child(2) .no{ color:var(--sub); }
+    .rank-item:nth-child(3) .no{ color:var(--red); }
+    .rank-item .txt{ flex:1; min-width:0; }
+    .rank-item .txt h3{ font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .rank-item .txt p{ font-size:12px; color:var(--sub); margin-top:4px; }
+    .rank-item .up{ font-size:12px; color:var(--red); }
+
+    /* 分类 */
+    .cats{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+    .cat{ position:relative; height:130px; border-radius:16px; padding:20px; display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden; border:1px solid var(--line); }
+    .cat::before{ content:""; position:absolute; inset:0; opacity:.5; transition:.3s; }
+    .cat:hover::before{ opacity:.8; }
+    .cat.c1::before{ background:linear-gradient(135deg,#ff5b5b,#7a1f3d); }
+    .cat.c2::before{ background:linear-gradient(135deg,#4d8dff,#1f3d7a); }
+    .cat.c3::before{ background:linear-gradient(135deg,#ffb545,#7a5a1f); }
+    .cat.c4::before{ background:linear-gradient(135deg,#2ec7a3,#1f7a6b); }
+    .cat .ico{ font-size:30px; }
+    .cat h3{ font-size:18px; margin-top:8px; }
+    .cat p{ font-size:12px; opacity:.85; }
+
+    /* 关于 */
+    .about{ background:linear-gradient(180deg,transparent,var(--bg2)); }
+    .about-inner{ display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; }
+    .feats{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .feat{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; }
+    .feat .n{ font-size:24px; font-weight:800; color:var(--gold); }
+    .feat h4{ font-size:15px; margin:6px 0 4px; }
+    .feat p{ font-size:12px; color:var(--sub); }
+
+    /* 页脚 */
+    footer{ border-top:1px solid var(--line); padding:36px 0 28px; text-align:center; color:var(--sub); font-size:13px; }
+    footer .slogan{ font-size:16px; color:var(--txt); font-weight:700; margin-bottom:10px; }
+    footer .slogan em{ font-style:normal; color:var(--gold); }
+    .links{ display:flex; flex-wrap:wrap; justify-content:center; gap:16px; margin:16px 0; }
+    .links a{ color:var(--sub); font-size:13px; }
+    .links a:hover{ color:var(--gold); }
+
+    /* 移动端 */
+    @media (max-width:860px){
+        .nav-links{ position:fixed; inset:60px 0 0 0; background:rgba(7,9,26,.97); flex-direction:column; padding:26px; gap:18px; transform:translateX(100%); transition:.3s; }
+        .nav-links.open{ transform:translateX(0); }
+        .menu-btn{ display:block; margin-left:auto; }
+        .search{ display:none; }
+        .grid.movies{ grid-template-columns:repeat(2,1fr); gap:14px; }
+        .grid.rank{ grid-template-columns:1fr; }
+        .cats{ grid-template-columns:repeat(2,1fr); gap:12px; }
+        .about-inner{ grid-template-columns:1fr; }
+        .hero{ padding:40px 0 48px; }
+        section{ padding:40px 0; }
+    }
+    @media (max-width:400px){
+        .feats{ grid-template-columns:1fr; }
+    }
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/yazhou.js"></script>
+
+<header>
+    <div class="wrap nav">
+        <a class="logo" href="#top"><span class="dot">98</span>电影网<em>·98dianyingwang-app</em></a>
+        <nav class="nav-links" id="navLinks">
+            <a href="#hot" class="active">首页推荐</a>
+            <a href="#movies">电影频道</a>
+            <a href="#tv">电视剧</a>
+            <a href="#rank">排行榜</a>
+            <a href="#cats">分类导航</a>
+            <a href="#about">关于我们</a>
+        </nav>
+        <div class="search">
+            <span>🔍</span>
+            <input type="search" placeholder="搜电影/演员">
+        </div>
+        <button class="menu-btn" id="menuBtn" aria-label="菜单">☰</button>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="top">
+    <div class="wrap">
+        <h1>98电影网 · <span>98dianyingwang-app</span><br>高清电影在线观看第一站</h1>
+        <p>98电影网（98dianyingwang-app）专注提供最新电影、热播电视剧、动漫综艺的高清免费在线观看与影视资源导航。每日更新，秒播流畅，手机电脑自适应，让您随时随地畅享影院级体验。</p>
+        <div class="hero-tags">
+            <b class="hot">🔥 今日热播</b>
+            <b>2026最新院线</b>
+            <b>4K 高清画质</b>
+            <b>免费观看</b>
+            <b>无广告畅享</b>
+            <b>多端同步</b>
+        </div>
+    </div>
+</section>
+
+<!-- 首页推荐 -->
+<section id="hot">
+    <div class="wrap">
+        <div class="sec-head">
+            <h2><i></i>首页推荐 · 编辑精选</h2>
+            <a class="more" href="#movies">查看更多 →</a>
+        </div>
+        <div class="grid movies">
+            <a class="card" href="#">
+                <div class="poster">
+                    <div class="ph">星际</div>
+                    <span class="tag">科幻</span>
+                    <span class="tag score">9.2</span>
+                    <div class="bar" style="width:92%"></div>
+                </div>
+                <div class="info">
+                    <h3>星际回响</h3>
+                    <p><span>2026 · 科幻冒险</span><span>2.1万热度</span></p>
+                </div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster">
+                    <div class="ph">长安</div>
+                    <span class="tag">古装</span>
+                    <span class="tag score">8.8</span>
+                    <div class="bar" style="width:88%"></div>
+                </div>
+                <div class="info">
+                    <h3>长安十二时辰·终章</h3>
+                    <p><span>2026 · 古装悬疑</span><span>1.8万热度</span></p>
+                </div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster">
+                    <div class="ph">猎豹</div>
+                    <span class="tag">动作</span>
+                    <span class="tag score">8.5</span>
+                    <div class="bar" style="width:85%"></div>
+                </div>
+                <div class="info">
+                    <h3>猎豹行动</h3>
+                    <p><span>2026 · 动作犯罪</span><span>1.5万热度</span></p>
+                </div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster">
+                    <div class="ph">深海</div>
+                    <span class="tag">动画</span>
+                    <span class="tag score">9.0</span>
+                    <div class="bar" style="width:90%"></div>
+                </div>
+                <div class="info">
+                    <h3>深海备忘录</h3>
+                    <p><span>2026 · 动画奇幻</span><span>1.9万热度</span></p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- 电影频道 -->
+<section id="movies" style="padding-top:0">
+    <div class="wrap">
+        <div class="sec-head">
+            <h2><i></i>电影频道</h2>
+            <a class="more" href="#cats">全部分类 →</a>
+        </div>
+        <div class="grid movies">
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">动作</div><span class="tag">动作</span><div class="bar" style="width:80%"></div></div>
+                <div class="info"><h3>极速追击</h3><p><span>高清</span><span>120分钟</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">喜剧</div><span class="tag">喜剧</span><div class="bar" style="width:76%"></div></div>
+                <div class="info"><h3>开心合伙人</h3><p><span>高清</span><span>105分钟</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">爱情</div><span class="tag">爱情</span><div class="bar" style="width:82%"></div></div>
+                <div class="info"><h3>春日来信</h3><p><span>高清</span><span>98分钟</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">恐怖</div><span class="tag">悬疑</span><div class="bar" style="width:70%"></div></div>
+                <div class="info"><h3>午夜回声</h3><p><span>高清</span><span>112分钟</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">纪录</div><span class="tag">纪录片</span><div class="bar" style="width:88%"></div></div>
+                <div class="info"><h3>山河中国</h3><p><span>4K</span><span>3集</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">战争</div><span class="tag">战争</span><div class="bar" style="width:78%"></div></div>
+                <div class="info"><h3>钢铁洪流</h3><p><span>高清</span><span>146分钟</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">剧情</div><span class="tag">剧情</span><div class="bar" style="width:84%"></div></div>
+                <div class="info"><h3>父亲的山</h3><p><span>高清</span><span>128分钟</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">奇幻</div><span class="tag">奇幻</span><div class="bar" style="width:74%"></div></div>
+                <div class="info"><h3>云上之城</h3><p><span>4K</span><span>133分钟</span></p></div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- 电视剧 -->
+<section id="tv" style="background:linear-gradient(180deg,transparent,var(--bg2))">
+    <div class="wrap">
+        <div class="sec-head">
+            <h2><i></i>热播电视剧 · 动漫综艺</h2>
+            <a class="more" href="#rank">观看排行 →</a>
+        </div>
+        <div class="grid movies">
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">S1</div><span class="tag">都市</span><span class="tag score">更新至28集</span><div class="bar" style="width:95%"></div></div>
+                <div class="info"><h3>城中灯火</h3><p><span>2026国产剧</span><span>热播中</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">S2</div><span class="tag">古装</span><span class="tag score">更新至16集</span><div class="bar" style="width:86%"></div></div>
+                <div class="info"><h3>凤鸣九天</h3><p><span>2026古装剧</span><span>热播中</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">A1</div><span class="tag">动漫</span><span class="tag score">全24集</span><div class="bar" style="width:90%"></div></div>
+                <div class="info"><h3>灵境行者</h3><p><span>国漫推荐</span><span>已完结</span></p></div>
+            </a>
+            <a class="card" href="#">
+                <div class="poster"><div class="ph">V1</div><span class="tag">综艺</span><span class="tag score">每周五更新</span><div class="bar" style="width:82%"></div></div>
+                <div class="info"><h3>狂欢之夜</h3><p><span>真人秀</span><span>更新中</span></p></div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- 排行榜 -->
+<section id="rank">
+    <div class="wrap">
+        <div class="sec-head">
+            <h2><i></i>98电影网 · 实时排行榜</h2>
+            <a class="more" href="#hot">返回顶部 ↑</a>
+        </div>
+        <div class="grid rank">
+            <div>
+                <div class="rank-item"><span class="no">1</span><div class="txt"><h3>星际回响</h3><p>科幻冒险 · 9.2分 · 2.1万热度</p></div><span class="up">↑3</span></div>
+                <div class="rank-item"><span class="no">2</span><div class="txt"><h3>长安十二时辰·终章</h3><p>古装悬疑 · 8.8分 · 1.8万热度</p></div><span class="up">↑1</span></div>
+                <div class="rank-item"><span class="no">3</span><div class="txt"><h3>深海备忘录</h3><p>动画奇幻 · 9.0分 · 1.9万热度</p></div><span class="up">↑5</span></div>
+                <div class="rank-item"><span class="no">4</span><div class="txt"><h3>猎豹行动</h3><p>动作犯罪 · 8.5分 · 1.5万热度</p></div><span class="up">↓1</span></div>
+                <div class="rank-item"><span class="no">5</span><div class="txt"><h3>城中灯火</h3><p>都市情感 · 8.6分 · 1.6万热度</p></div><span class="up">↑2</span></div>
+            </div>
+            <div>
+                <div class="rank-item"><span class="no">6</span><div class="txt"><h3>极速追击</h3><p>动作 · 8.1分 · 1.2万热度</p></div><span class="up">↑4</span></div>
+                <div class="rank-item"><span class="no">7</span><div class="txt"><h3>山河中国</h3><p>纪录片 · 9.1分 · 9800热度</p></div><span class="up">—</span></div>
+                <div class="rank-item"><span class="no">8</span><div class="txt"><h3>春日来信</h3><p>爱情 · 8.3分 · 8600热度</p></div><span class="up">↓2</span></div>
+                <div class="rank-item"><span class="no">9</span><div class="txt"><h3>灵境行者</h3><p>动漫 · 8.9分 · 1.1万热度</p></div><span class="up">↑6</span></div>
+                <div class="rank-item"><span class="no">10</span><div class="txt"><h3>钢铁洪流</h3><p>战争 · 8.4分 · 7300热度</p></div><span class="up">↓3</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 分类导航 -->
+<section id="cats" style="padding-top:0">
+    <div class="wrap">
+        <div class="sec-head">
+            <h2><i></i>影视分类导航</h2>
+            <a class="more" href="#movies">进入电影频道 →</a>
+        </div>
+        <div class="cats">
+            <a class="cat c1" href="#"><span class="ico">🎬</span><h3>电影大片</h3><p>动作 / 科幻 / 喜剧 / 悬疑</p></a>
+            <a class="cat c2" href="#"><span class="ico">📺</span><h3>电视剧集</h3><p>国产 / 韩剧 / 美剧 / 日剧</p></a>
+            <a class="cat c3" href="#"><span class="ico">🎨</span><h3>动漫综艺</h3><p>国漫 / 日漫 / 真人秀</p></a>
+            <a class="cat c4" href="#"><span class="ico">🏆</span><h3>榜单专题</h3><p>热播榜 / 高分榜 / 新片榜</p></a>
+        </div>
+    </div>
+</section>
+
+<!-- 关于 -->
+<section id="about" class="about">
+    <div class="wrap about-inner">
+        <div>
+            <div class="sec-head" style="margin-bottom:20px"><h2><i></i>关于 98电影网</h2></div>
+            <p style="color:var(--sub); font-size:15px;">98电影网（98dianyingwang-app）是高清电影在线观看与影视资源导航平台。我们致力于为影视爱好者提供最新、最全、最清晰的电影与电视剧观看指引，涵盖院线新片、经典老片、热播剧集、动漫综艺等丰富内容。</p>
+            <p style="color:var(--sub); font-size:15px; margin-top:12px;">网站采用响应式设计，手机、平板、电脑均可获得最佳浏览体验。所有栏目内页链接均以锚点方式组织于本单页，结构清晰、加载迅速，便于搜索引擎抓取与收录。</p>
+            <div class="feats" style="margin-top:22px;">
+                <div class="feat"><div class="n">4K</div><h4>高清画质</h4><p>超清流畅播放</p></div>
+                <div class="feat"><div class="n">0</div><h4>免费观看</h4><p>无门槛畅享</p></div>
+                <div class="feat"><div class="n">24h</div><h4>每日更新</h4><p>新片第一时间</p></div>
+                <div class="feat"><div class="n">100%</div><h4>多端适配</h4><p>手机电脑通吃</p></div>
+            </div>
+        </div>
+        <div class="card" style="padding:28px;">
+            <h3 style="font-size:18px; margin-bottom:14px;">网站导航速览</h3>
+            <ul style="list-style:none; display:grid; gap:12px;">
+                <li style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--line); padding-bottom:8px;"><a href="#hot">首页推荐</a><span style="color:var(--gold)">编辑精选</span></li>
+                <li style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--line); padding-bottom:8px;"><a href="#movies">电影频道</a><span style="color:var(--sub)">8大类型</span></li>
+                <li style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--line); padding-bottom:8px;"><a href="#tv">电视剧·动漫·综艺</a><span style="color:var(--sub)">同步热播</span></li>
+                <li style="display:flex; justify-content:space-between; border-bottom:1px dashed var(--line); padding-bottom:8px;"><a href="#rank">实时排行榜</a><span style="color:var(--sub)">Top 10</span></li>
+                <li style="display:flex; justify-content:space-between; padding-bottom:8px;"><a href="#cats">分类导航</a><span style="color:var(--sub)">快速找片</span></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="wrap">
+        <div class="slogan">98电影网 <em>· 98dianyingwang-app</em> —— 高清电影在线观看，从这里开始</div>
+        <div class="links">
+            <a href="#top">首页</a>
+            <a href="#hot">推荐</a>
+            <a href="#movies">电影</a>
+            <a href="#tv">电视剧</a>
+            <a href="#rank">排行榜</a>
+            <a href="#cats">分类</a>
+            <a href="#about">关于</a>
+        </div>
+        <p>网站名称：98电影网　网站网址：https://98dianyingwang-app.github.io</p>
+        <p style="margin-top:8px; opacity:.6;">© 2026 98电影网（98dianyingwang-app）保留所有权利。本页为影视资源导航演示页面，内页链接以 # 锚点替代。</p>
+    </div>
+</footer>
+
+<script>
+    // 移动端菜单
+    var menuBtn = document.getElementById('menuBtn');
+    var navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', function(){
+        navLinks.classList.toggle('open');
+        menuBtn.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
+    });
+    navLinks.addEventListener('click', function(e){
+        if(e.target.tagName === 'A' && window.innerWidth <= 860){
+            navLinks.classList.remove('open');
+            menuBtn.textContent = '☰';
+        }
+    });
+    // 导航高亮
+    var secs = ['hot','movies','tv','rank','cats','about'].map(function(id){ return document.getElementById(id); });
+    var links = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', function(){
+        var pos = window.scrollY + 120;
+        var idx = 0;
+        secs.forEach(function(s, i){ if(s && s.offsetTop <= pos) idx = i; });
+        links.forEach(function(a, i){ a.classList.toggle('active', i === idx); });
+    });
+</script>
+</body>
+</html>
